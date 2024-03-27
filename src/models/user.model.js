@@ -2,7 +2,12 @@ import mongoose, {Schema} from "mongoose";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import {ApiError} from "../utils/ApiError.js"
+// import dotenv from "dotenv"
 import dotenv from "dotenv"
+
+dotenv.config({
+    path : "/.env"
+})
 
 const userSchema = new Schema({
     fullName : {
@@ -49,7 +54,7 @@ userSchema.methods.isPasswordCorrect = async function(password) {
 }
 
 userSchema.methods.generateAccessToken = function () {
-    console.log(process.env.ACCCESS_TOKEN_SECRET)
+    // console.log(process.env.ACCESS_TOKEN_SECRET)
     try{
         return jwt.sign(
             {
@@ -57,7 +62,7 @@ userSchema.methods.generateAccessToken = function () {
                 email : this.email,
                 fullName : this.fullName
             },
-            process.env.ACCCESS_TOKEN_SECRET,
+            process.env.ACCESS_TOKEN_SECRET,
             {
                 expiresIn : process.env.ACCESS_TOKEN_EXPIRY
             }
