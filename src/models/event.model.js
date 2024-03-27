@@ -5,6 +5,10 @@ const EventSchema = new Schema({
         type : String,
         requiree : true,
     },
+    desc : {
+        type : String,
+        required : true
+    },
     startDate : {
         type : Number,
         required : true,
