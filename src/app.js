@@ -9,6 +9,13 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 
+import eventRouter from "./routes/event.route.js"
 
+app.use("/api/v1/events",eventRouter)
+
+
+import userRouter from "./routes/user.route.js"
+
+app.use("/api/v1/users",userRouter)
 
 export default app
