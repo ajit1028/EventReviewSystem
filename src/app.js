@@ -15,12 +15,14 @@ app.use(cookieParser())
 
 
 import eventRouter from "./routes/event.route.js"
-
 app.use("/api/v1/events",eventRouter)
 
 
 import userRouter from "./routes/user.route.js"
-
 app.use("/api/v1/users",userRouter)
+
+
+import reviewRouter from "./routes/review.route.js"
+app.use("/api/v1/reviews",reviewRouter)
 
 export default app
