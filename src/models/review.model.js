@@ -36,6 +36,10 @@ const reviewSchema = new Schema({
      reported :{
         type : Number,
         default : 0
+     },
+     flagged : {
+        type : Boolean,
+        deafult : false
      }
 },{
     timestamps : true

@@ -74,6 +74,30 @@ const reviewSummary = asyncHandler(async(req,res)=>{
 
 })
 
+const reportReview = asyncHandler(async(req,res)=>{
+    const eventID = req.params.event_id;
+    const review = await Review.findOne({ event: eventID })
+
+    if(!review){
+        throw new ApiError(400,"No Review found with the provided ID")
+    }
+
+    const reportCount= review.reported + 1;
+    if(reportCount === 5){
+        review.flagged = true
+    }
+
+    review.reported = reportCount
+    review.save()
+
+    res.status(200)
+    .json(
+        new ApiResponse(200,{review},"Review Reported Successfully")
+    )
+
+})
+
 
 export {createReview,
-    reviewSummary}
+    reviewSummary,
+    reportReview}
