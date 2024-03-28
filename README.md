@@ -66,7 +66,7 @@ To experience the functionalities of the Event Review and Rating System, clone t
 **Step:2-** Go to the project directory
 
 ```bash
-  cd Event-Review-Rating-System
+  cd EventReviewSystem
 ```
 
 **Step:3-** Install all the dependencies in Backend folder.
@@ -74,7 +74,6 @@ To experience the functionalities of the Event Review and Rating System, clone t
 - Installl dependencies for backend
 
 ```bash
-  
   npm install
 ```
 
@@ -90,11 +89,8 @@ To experience the functionalities of the Event Review and Rating System, clone t
 
 **Step:5-** Start the Backend server / app
 
-- Start the app.js
-
 ```bash
   //open new terminal
-  cd Backend/
   npm run dev
 ```
 
@@ -117,7 +113,3 @@ To experience the functionalities of the Event Review and Rating System, clone t
 ```bash
    https://blue-zodiac-726723.postman.co/workspace/New-Team-Workspace~daa0d704-2d2b-40f1-8506-59f05f8a5df9/collection/33407386-ca65c906-93a0-40d7-b927-1c064c9c70a4?action=share&creator=33407386
 ```
-
-## Made By
-
-- [@Ajit Singh](https://github.com/ajit1028)
