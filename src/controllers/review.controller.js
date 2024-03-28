@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { Like } from "../models/reviewLike.model.js"
+import { Event } from "../models/event.model.js"
 
 function calculateAverageRating(ratings) {
     const sum = ratings.reduce((acc, rating) => acc + rating, 0);
@@ -102,11 +103,12 @@ const getReview = asyncHandler(async(req,res)=>{
     const page = parseInt(req.query.page) || 1; // Default to page 1 if not provided
     const limit = parseInt(req.query.limit) || 10; // Default to 10 reviews per page
 
+    const event = req.params.event_id
     const startIndex = (page - 1) * limit;
 
     try {
     const totalReviews = await Review.countDocuments({});
-    const reviews = await Review.find({}).skip(startIndex).limit(limit);
+    const reviews = await Review.find({event : event}).skip(startIndex).limit(limit);
 
     // Pagination result
     const pagination = {};
@@ -138,8 +140,8 @@ const getReview = asyncHandler(async(req,res)=>{
 const responseToReview = asyncHandler(async(req,res)=>{
 
     const reviewId = req.params.review_id
-
-    const {organiserId,eventId,desc} = req.body
+    const organiserId = req.user._id
+    const {eventId,desc} = req.body
 
     const event = await Event.findById(eventId)
 
@@ -147,11 +149,14 @@ const responseToReview = asyncHandler(async(req,res)=>{
         throw new ApiError(404,"Event Not Found")
     }
 
-    if(!(event.createdBy === organiserId)){
+    // console.log(event.createdBy,organiserId)
+    if(!event.createdBy.equals(organiserId)){
         throw new ApiError(400,"Only Organiser can respond")
     }
 
-    const review = Review.findById(reviewId)
+    const review = await Review.findById(reviewId)
+
+    // console.log(review)
     if(!review){
         throw new ApiError(404,"Review not found")
     }
@@ -160,7 +165,9 @@ const responseToReview = asyncHandler(async(req,res)=>{
     review.save();
 
     res.status(200)
-    .json(200,review,"Responded Successfully")
+    .json(
+        new ApiResponse(200,review,"Responded Successfully")
+    )
 })
 
 const likeReview = asyncHandler(async(req,res)=>{

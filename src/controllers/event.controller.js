@@ -37,6 +37,15 @@ const registerEvent = asyncHandler(async(req,res)=>{
     const {eventId} = req.body;
     const userId = req.user?._id;
 
+    const isAlreadyRegistered = await RegisteredUser.findOne({
+        eventId : eventId,
+        userId : userId
+    })
+
+    if(isAlreadyRegistered){
+        throw new ApiError(400,"User already registered")
+    }
+
     const registered = await RegisteredUser.create({
         eventId,
         userId
