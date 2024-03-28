@@ -40,6 +40,13 @@ const reviewSchema = new Schema({
      flagged : {
         type : Boolean,
         deafult : false
+     },
+     response : {
+       type : String
+     },
+     like : {
+         type : Schema.Types.ObjectId,
+         ref : "user"
      }
 },{
     timestamps : true

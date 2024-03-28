@@ -52,4 +52,61 @@ const registerEvent = asyncHandler(async(req,res)=>{
     )
 })
 
-export {createEvent,registerEvent}
+
+const getEventsForOrganiser = asyncHandler(async(req,res)=>{
+
+
+    const organiserId = req.params.organiser_id;
+
+    if(!organiserId){
+        throw new ApiError(400,"Organiser Id required")
+    }
+
+    const events = await Event.find({createdBy : organiserId})
+
+    res.status(200)
+    .json(
+        new ApiResponse(200,{events},"events by organiser fetched successfully")
+    )
+})
+
+const getAllEvents = asyncHandler(async(req,res)=>{
+
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const startIdx = (page-1)*limit;
+    const endIdx = page*limit
+
+    try {
+        const totalDocuments = await Event.countDocuments({})
+        const events = await Event.find({}).skip(startIdx).limit(limit)
+    
+        const pagination = {};
+    
+        if(endIdx < totalDocuments){
+            pagination.next = {
+                page : page + 1,
+                limit : limit
+            }
+        }
+    
+        if(startIdx > 0){
+            pagination.prev = {
+                page : page + 1,
+                limit : limit
+            }
+        }
+    
+        res.status(200)
+        .json(
+            new ApiResponse(200,{events,pagination},"Events Fetched")
+        )
+    } catch (error) {
+        throw new ApiError(500,error?.message)
+    }
+})
+
+
+export {createEvent,registerEvent,getEventsForOrganiser, getAllEvents}
