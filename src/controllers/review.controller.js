@@ -135,9 +135,37 @@ const getReview = asyncHandler(async(req,res)=>{
 
 })
 
+const responseToReview = asyncHandler(async(req,res)=>{
+
+    const reviewId = req.params.review_id
+
+    const {organiserId,eventId,desc} = req.body
+
+    const event = await Event.findById(eventId)
+
+    if(!event){
+        throw new ApiError(404,"Event Not Found")
+    }
+
+    if(!(event.createdBy === organiserId)){
+        throw new ApiError(400,"Only Organiser can respond")
+    }
+
+    const review = Review.findById(reviewId)
+    if(!review){
+        throw new ApiError(404,"Review not found")
+    }
+
+    review.response = desc;
+    review.save();
+
+    res.status(200)
+    .json(200,review,"Responded Successfully")
+})
 
 export {createReview,
     reviewSummary,
     reportReview,
-    getReview
+    getReview,
+    responseToReview
 }
