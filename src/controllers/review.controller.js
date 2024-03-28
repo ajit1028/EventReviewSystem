@@ -2,7 +2,7 @@ import { Review } from "../models/review.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
-
+import { Like } from "../models/reviewLike.model.js"
 
 function calculateAverageRating(ratings) {
     const sum = ratings.reduce((acc, rating) => acc + rating, 0);
@@ -163,9 +163,31 @@ const responseToReview = asyncHandler(async(req,res)=>{
     .json(200,review,"Responded Successfully")
 })
 
+const likeReview = asyncHandler(async(req,res)=>{
+
+    const reviewId = req.params.review_id
+    const userId = req.user._id
+
+    if(!reviewId && !userId){
+        throw new ApiError(500,"Problem on Client Side")
+    }
+
+    const liked = await Like.create({
+        reviewId,
+        userId
+    })
+
+    res.status(200)
+    .json(
+        new ApiResponse(200,liked,"Liked Successfully")
+    )
+
+})
+
 export {createReview,
     reviewSummary,
     reportReview,
     getReview,
-    responseToReview
+    responseToReview,
+    likeReview
 }
